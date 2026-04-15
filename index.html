@@ -20,6 +20,8 @@
     --ind: #7b61ff;
     --sat: #00d4aa;
     --hyb: #ff9f1c;
+    --pro: #4ade80;
+    --con: #f87171;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; }
@@ -42,12 +44,12 @@
   }
   .header p { font-size:0.72rem; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-top:3px; }
   .header-actions { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  
   .btn {
     padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border);
     font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:500;
     cursor:pointer; transition: all 0.2s; letter-spacing:0.5px;
   }
-  .btn-primary { background:var(--accent); color:#0d0d0f; border-color:var(--accent); }
   .btn-ghost { background:transparent; color:var(--text); }
   .btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
 
@@ -66,7 +68,7 @@
   }
   .filter-chip.active { border-color:var(--accent); color:var(--accent); background: rgba(200,255,110,0.08); }
 
-  .strain-list { padding: 12px 16px; display:flex; flex-direction:column; gap:10px; }
+  .strain-list { padding: 12px 16px; display:flex; flex-direction:column; gap:12px; }
   .strain-card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -88,7 +90,6 @@
   .type-badge { 
     font-size:0.65rem; text-transform:uppercase; font-weight:700; 
     padding:3px 9px; border-radius:6px; letter-spacing:0.5px; 
-    white-space: nowrap;
   }
   .type-indica { background:rgba(123,97,255,0.18); color:var(--ind); }
   .type-sativa { background:rgba(0,212,170,0.18); color:var(--sat); }
@@ -106,10 +107,15 @@
   .detail-box.full { grid-column: 1/-1; }
   .detail-label { font-size:0.62rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; display:flex; align-items:center; gap:5px; }
   .detail-label .dot { width:6px; height:6px; border-radius:50%; display:inline-block; }
-  .detail-value { font-size:0.83rem; color:var(--text); }
+  .detail-value { font-size:0.83rem; color:var(--text); line-height: 1.4; }
   
-  .terp-tags { display:flex; flex-wrap:wrap; gap:5px; }
-  .terp-tag { font-family:'DM Mono',monospace; font-size:0.68rem; padding:3px 8px; border-radius:6px; background:rgba(123,97,255,0.1); color:#a89aff; }
+  .tag-list { display:flex; flex-wrap:wrap; gap:5px; margin-top:4px; }
+  .tag { font-size:0.65rem; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.05); color:var(--muted); border:1px solid var(--border); }
+  
+  .terp-tag { font-family:'DM Mono',monospace; font-size:0.68rem; padding:3px 8px; border-radius:6px; background:rgba(123,97,255,0.1); color:#a89aff; margin-right: 4px; display: inline-block; }
+
+  .pro-text { color: var(--pro); font-weight: 500; }
+  .con-text { color: var(--con); font-weight: 500; }
 
   .edit-area { width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:10px; font-family:'DM Mono',monospace; font-size:0.75rem; min-height:100px; }
 </style>
@@ -155,7 +161,6 @@ async function fetchStrains() {
   try {
     const { data, error } = await _supabase.from('strains').select('*').order('name', { ascending: true });
     if (error) throw error;
-
     strains = data || [];
     document.getElementById('strainCount').innerText = `${strains.length} Strains Available`;
     renderStrains('all');
@@ -187,26 +192,28 @@ function renderStrains(filter) {
     });
   }
 
-  if (filtered.length === 0) {
-    list.innerHTML = `<p style="padding:40px;color:var(--muted);text-align:center;">No strains match this filter.</p>`;
-    return;
-  }
-
   filtered.forEach((s, i) => {
     const card = document.createElement('div');
     card.className = `strain-card ${allExpanded ? 'expanded' : ''}`;
     card.id = `card-${i}`;
 
     const typeClass = getTypeClass(s.type);
-    const displayType = s.type && s.type.trim() !== '' ? s.type : 'Hybrid';
+    const displayType = s.type || 'Hybrid';
 
+    // Parse Terpenes
     let terpHTML = 'None';
     if (s.terpenes) {
       const terps = Array.isArray(s.terpenes) ? s.terpenes : String(s.terpenes).split(',').map(t => t.trim());
       terpHTML = terps.filter(t => t).map(t => `<span class="terp-tag">${t}</span>`).join('');
     }
 
-    // Fixed the template literal syntax here (removed backslashes and fixed curly braces)
+    // Parse Tags
+    let tagsHTML = '';
+    if (s.tags) {
+      const tagArray = Array.isArray(s.tags) ? s.tags : String(s.tags).split(',').map(t => t.trim());
+      tagsHTML = tagArray.filter(t => t).map(t => `<span class="tag">#${t}</span>`).join('');
+    }
+
     card.innerHTML = `
       <div class="strain-header" onclick="toggleCard(${i})">
         <span class="strain-num">${String(i+1).padStart(2,'0')}</span>
@@ -223,20 +230,34 @@ function renderStrains(filter) {
         <div class="detail-grid">
           <div class="detail-box full">
             <div class="detail-label"><span class="dot" style="background:var(--muted)"></span>Genetics</div>
-            <div class="detail-value">${s.genetics || 'Unknown'}</div>
+            <div class="detail-value">${s.genetics || 'Unknown Genetics'}</div>
           </div>
+          
+          <div class="detail-box">
+            <div class="detail-label"><span class="dot" style="background:var(--pro)"></span>Pros</div>
+            <div class="detail-value pro-text">${s.pros || 'N/A'}</div>
+          </div>
+          
+          <div class="detail-box">
+            <div class="detail-label"><span class="dot" style="background:var(--con)"></span>Cons</div>
+            <div class="detail-value con-text">${s.cons || 'N/A'}</div>
+          </div>
+
           <div class="detail-box full">
             <div class="detail-label"><span class="dot" style="background:var(--accent3)"></span>Terpenes</div>
             <div class="terp-tags">${terpHTML}</div>
           </div>
+
           <div class="detail-box full">
             <div class="detail-label"><span class="dot" style="background:var(--accent2)"></span>Best For</div>
             <div class="detail-value">${s.bestFor || 'General Use'}</div>
+            <div class="tag-list">${tagsHTML}</div>
           </div>
+
           ${editMode ? `
             <div class="detail-box full">
               <textarea class="edit-area" id="edit-${s.id || i}">${JSON.stringify(s, null, 2)}</textarea>
-              <button class="btn btn-primary" style="margin-top:10px" onclick="saveToCloud(${s.id || i})">Save Changes</button>
+              <button class="btn btn-primary" style="margin-top:10px" onclick="console.log('Save logic here')">Save Changes</button>
             </div>
           ` : ''}
         </div>
