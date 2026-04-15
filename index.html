@@ -209,10 +209,6 @@
   <button class="filter-chip" onclick="filterStrains('creative', this)">Creative/Social</button>
 </div>
 
-<div class="unlabeled-note">
-  ⚠️ One tin in the bottom-left has no label. Ask your supplier what it is!
-</div>
-
 <div class="strain-list" id="strainList"></div>
 
 <div id="shareModal">
@@ -236,7 +232,7 @@
 // 2. MODIFIED: CONNECT TO SUPABASE
 // ============================================================
 const supabaseUrl = 'https://lukkvyjkkwrtbshzombo.supabase.co';
-const supabaseKey = 'PASTE_YOUR_SB_PUBLISHABLE_KEY_HERE'; // Replace with key from photo
+const supabaseKey = 'sb_publishable_vw0EbFO3Y2V4k95ONkm3Rw_4PovdtRO'; 
 const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 let strains = [];
