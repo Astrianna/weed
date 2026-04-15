@@ -17,7 +17,6 @@
     --accent3: #7b61ff;
     --text: #f0f0f5;
     --muted: #888899;
-    --danger: #ff5252;
     --ind: #7b61ff;
     --sat: #00d4aa;
     --hyb: #ff9f1c;
@@ -25,7 +24,6 @@
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; }
 
-  /* HEADER */
   .header {
     background: linear-gradient(135deg, #0d0d0f 0%, #1a1a24 100%);
     border-bottom: 1px solid var(--border);
@@ -40,7 +38,6 @@
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
     line-height:1;
   }
   .header p { font-size:0.72rem; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-top:3px; }
@@ -54,7 +51,6 @@
   .btn-ghost { background:transparent; color:var(--text); }
   .btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
 
-  /* FILTERS */
   .filters {
     padding: 12px 16px;
     display:flex; gap:8px; overflow-x:auto;
@@ -70,7 +66,6 @@
   }
   .filter-chip.active { border-color:var(--accent); color:var(--accent); background: rgba(200,255,110,0.08); }
 
-  /* STRAIN LIST */
   .strain-list { padding: 12px 16px; display:flex; flex-direction:column; gap:10px; }
   .strain-card {
     background: var(--card);
@@ -88,14 +83,16 @@
   .strain-num { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:var(--muted); min-width:24px; }
   .strain-info { flex:1; min-width:0; }
   .strain-name { font-weight:600; font-size:0.95rem; }
-  .strain-meta { display:flex; gap:8px; align-items:center; margin-top:3px; }
-  
-  /* TYPE BADGES */
-  .type-badge { font-size:0.65rem; text-transform:uppercase; font-weight:700; padding:2px 8px; border-radius:4px; letter-spacing:0.5px; }
+  .strain-meta { display:flex; gap:8px; align-items:center; margin-top:3px; flex-wrap:wrap; }
+
+  .type-badge { 
+    font-size:0.65rem; text-transform:uppercase; font-weight:700; 
+    padding:2px 8px; border-radius:4px; letter-spacing:0.5px; 
+  }
   .type-indica { background:rgba(123,97,255,0.15); color:var(--ind); }
   .type-sativa { background:rgba(0,212,170,0.15); color:var(--sat); }
   .type-hybrid { background:rgba(255,159,28,0.15); color:var(--hyb); }
-  
+
   .thc-pill { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--accent); }
   .expand-icon { color:var(--muted); transition: transform 0.2s; }
   .strain-card.expanded .expand-icon { transform: rotate(180deg); }
@@ -128,7 +125,7 @@
 </div>
 
 <div class="filters">
-  <button class="filter-chip active" id="filterAll" onclick="filterStrains('all', this)">All</button>
+  <button class="filter-chip active" onclick="filterStrains('all', this)">All</button>
   <button class="filter-chip" onclick="filterStrains('sleepy', this)">😴 Sleepy</button>
   <button class="filter-chip" onclick="filterStrains('talkative', this)">🗣️ Talkative</button>
   <button class="filter-chip" onclick="filterStrains('energy', this)">⚡ Energy</button>
@@ -145,7 +142,7 @@
 
 <script>
 const SB_URL = 'https://lukkvyjkkwrtbshzcmbo.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1a2t2eWpra3dydGJzaHpjbWJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNjc0NTIsImV4cCI6MjA5MTg0MzQ1Mn0.IMFluSCt8XXCbh6WylfJVyHtEyFDbk9jeftofn_OhXM';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';   // ← YOUR REAL ANON KEY HERE
 
 const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
@@ -155,45 +152,42 @@ let allExpanded = false;
 
 async function fetchStrains() {
   try {
-    const { data, error } = await _supabase
-      .from('strains')
-      .select('*')
-      .order('name', { ascending: true });
-
+    const { data, error } = await _supabase.from('strains').select('*').order('name', { ascending: true });
     if (error) throw error;
 
     strains = data || [];
-    
-    document.getElementById('strainCount').innerText = 
-      `${strains.length} Strains Available`;
-
+    document.getElementById('strainCount').innerText = `${strains.length} Strains Available`;
     renderStrains('all');
   } catch (err) {
-    console.error("Supabase fetch error:", err);
-    document.getElementById('strainCount').innerHTML = 
-      `Failed to load strains.<br><small style="color:#ff5252">Error: ${err.message || 'Check console (F12) for details'}</small>`;
+    console.error(err);
+    document.getElementById('strainCount').innerHTML = `Error loading strains.<br><small style="color:#ff5252">${err.message}</small>`;
   }
+}
+
+function getTypeClass(type) {
+  if (!type) return 'type-hybrid';
+  const t = type.toLowerCase();
+  if (t.includes('indica')) return 'type-indica';
+  if (t.includes('sativa')) return 'type-sativa';
+  return 'type-hybrid';
 }
 
 function renderStrains(filter) {
   const list = document.getElementById('strainList');
   list.innerHTML = '';
-  
+
   let filtered = strains;
-  
   if (filter !== 'all') {
-    const lowerFilter = filter.toLowerCase();
+    const lower = filter.toLowerCase();
     filtered = strains.filter(s => {
       const tags = (s.tags || '').toLowerCase();
-      const bestFor = (s.bestFor || '').toLowerCase();
-      return tags.includes(lowerFilter) || bestFor.includes(lowerFilter);
+      const best = (s.bestFor || '').toLowerCase();
+      return tags.includes(lower) || best.includes(lower);
     });
   }
 
   if (filtered.length === 0) {
-    list.innerHTML = `<p style="padding:40px 20px; color:var(--muted); text-align:center; font-size:0.9rem;">
-      No strains match this filter.
-    </p>`;
+    list.innerHTML = `<p style="padding:40px;color:var(--muted);text-align:center;">No strains match this filter.</p>`;
     return;
   }
 
@@ -201,14 +195,13 @@ function renderStrains(filter) {
     const card = document.createElement('div');
     card.className = `strain-card ${allExpanded ? 'expanded' : ''}`;
     card.id = `card-${i}`;
-    
-    const typeClass = `type-${(s.type || 'hybrid').toLowerCase().replace(/[^a-z]/g, '')}`;
+
+    const typeClass = getTypeClass(s.type);
+    const displayType = s.type || 'Hybrid';
 
     let terpHTML = 'None';
     if (s.terpenes) {
-      const terps = Array.isArray(s.terpenes) 
-        ? s.terpenes 
-        : String(s.terpenes).split(',').map(t => t.trim());
+      const terps = Array.isArray(s.terpenes) ? s.terpenes : String(s.terpenes).split(',').map(t => t.trim());
       terpHTML = terps.map(t => `<span class="terp-tag">${t}</span>`).join('');
     }
 
@@ -218,7 +211,7 @@ function renderStrains(filter) {
         <div class="strain-info">
           <div class="strain-name">${s.name}</div>
           <div class="strain-meta">
-            <span class="type-badge \( {typeClass}"> \){s.type || 'Hybrid'}</span>
+            <span class="type-badge \( {typeClass}"> \){displayType}</span>
             <span class="thc-pill">THC ${s.thc || '??%'}</span>
           </div>
         </div>
@@ -251,8 +244,8 @@ function renderStrains(filter) {
   });
 }
 
-function toggleCard(i) { 
-  document.getElementById(`card-${i}`).classList.toggle('expanded'); 
+function toggleCard(i) {
+  document.getElementById(`card-${i}`).classList.toggle('expanded');
 }
 
 function filterStrains(type, btn) {
@@ -261,17 +254,16 @@ function filterStrains(type, btn) {
   renderStrains(type);
 }
 
-function toggleEditMode() { 
-  editMode = !editMode; 
-  renderStrains('all'); 
+function toggleEditMode() {
+  editMode = !editMode;
+  renderStrains('all');
 }
 
-function toggleAll() { 
-  allExpanded = !allExpanded; 
-  document.querySelectorAll('.strain-card').forEach(c => c.classList.toggle('expanded', allExpanded)); 
+function toggleAll() {
+  allExpanded = !allExpanded;
+  document.querySelectorAll('.strain-card').forEach(c => c.classList.toggle('expanded', allExpanded));
 }
 
-// Load the data
 fetchStrains();
 </script>
 </body>
