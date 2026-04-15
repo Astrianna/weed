@@ -87,11 +87,12 @@
 
   .type-badge { 
     font-size:0.65rem; text-transform:uppercase; font-weight:700; 
-    padding:2px 8px; border-radius:4px; letter-spacing:0.5px; 
+    padding:3px 9px; border-radius:6px; letter-spacing:0.5px; 
+    white-space: nowrap;
   }
-  .type-indica { background:rgba(123,97,255,0.15); color:var(--ind); }
-  .type-sativa { background:rgba(0,212,170,0.15); color:var(--sat); }
-  .type-hybrid { background:rgba(255,159,28,0.15); color:var(--hyb); }
+  .type-indica { background:rgba(123,97,255,0.18); color:var(--ind); }
+  .type-sativa { background:rgba(0,212,170,0.18); color:var(--sat); }
+  .type-hybrid { background:rgba(255,159,28,0.18); color:var(--hyb); }
 
   .thc-pill { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--accent); }
   .expand-icon { color:var(--muted); transition: transform 0.2s; }
@@ -159,14 +160,15 @@ async function fetchStrains() {
     document.getElementById('strainCount').innerText = `${strains.length} Strains Available`;
     renderStrains('all');
   } catch (err) {
-    console.error(err);
+    console.error("Fetch error:", err);
     document.getElementById('strainCount').innerHTML = `Error loading strains.<br><small style="color:#ff5252">${err.message}</small>`;
   }
 }
 
-function getTypeClass(type) {
-  if (!type) return 'type-hybrid';
-  const t = type.toLowerCase();
+function getTypeClass(typeStr) {
+  if (!typeStr) return 'type-hybrid';
+  const t = typeStr.toLowerCase();
+  console.log(`Type for strain: "${typeStr}" → class:`, t); // Remove after testing if wanted
   if (t.includes('indica')) return 'type-indica';
   if (t.includes('sativa')) return 'type-sativa';
   return 'type-hybrid';
@@ -197,12 +199,12 @@ function renderStrains(filter) {
     card.id = `card-${i}`;
 
     const typeClass = getTypeClass(s.type);
-    const displayType = s.type || 'Hybrid';
+    const displayType = s.type && s.type.trim() !== '' ? s.type : 'Hybrid';
 
     let terpHTML = 'None';
     if (s.terpenes) {
       const terps = Array.isArray(s.terpenes) ? s.terpenes : String(s.terpenes).split(',').map(t => t.trim());
-      terpHTML = terps.map(t => `<span class="terp-tag">${t}</span>`).join('');
+      terpHTML = terps.filter(t => t).map(t => `<span class="terp-tag">${t}</span>`).join('');
     }
 
     card.innerHTML = `
