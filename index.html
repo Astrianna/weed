@@ -51,10 +51,8 @@
     cursor:pointer; transition: all 0.2s; letter-spacing:0.5px;
   }
   .btn-primary { background:var(--accent); color:#0d0d0f; border-color:var(--accent); }
-  .btn-primary:hover { opacity:0.85; }
   .btn-ghost { background:transparent; color:var(--text); }
   .btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
-  .btn-sm { padding:6px 10px; font-size:0.72rem; }
 
   /* FILTERS */
   .filters {
@@ -68,132 +66,62 @@
     white-space:nowrap; padding: 5px 12px; border-radius:20px;
     border: 1px solid var(--border); background:transparent;
     color:var(--muted); font-size:0.75rem; cursor:pointer;
-    transition: all 0.2s; font-family:'DM Sans',sans-serif;
+    transition: all 0.2s;
   }
   .filter-chip.active { border-color:var(--accent); color:var(--accent); background: rgba(200,255,110,0.08); }
 
   /* STRAIN LIST */
   .strain-list { padding: 12px 16px; display:flex; flex-direction:column; gap:10px; }
-
   .strain-card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 14px;
     overflow: hidden;
-    transition: border-color 0.2s;
   }
-  .strain-card:hover { border-color: #3a3a4a; }
   .strain-card.expanded { border-color: var(--accent); }
 
   .strain-header {
     padding: 14px 16px;
     display: flex; align-items: center; gap:12px;
-    cursor: pointer; user-select:none;
+    cursor: pointer;
   }
-  .strain-num {
-    font-family:'Bebas Neue',sans-serif;
-    font-size:1.1rem; color:var(--muted);
-    min-width:24px; text-align:center;
-  }
+  .strain-num { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:var(--muted); min-width:24px; }
   .strain-info { flex:1; min-width:0; }
-  .strain-name {
-    font-weight:600; font-size:0.95rem;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  }
-  .strain-meta { display:flex; gap:8px; align-items:center; margin-top:3px; flex-wrap:wrap; }
-  .type-badge {
-    font-size:0.65rem; padding:2px 8px; border-radius:10px;
-    font-weight:600; letter-spacing:0.5px; text-transform:uppercase;
-  }
-  .type-indica { background:rgba(123,97,255,0.2); color:var(--ind); border:1px solid rgba(123,97,255,0.3); }
-  .type-sativa { background:rgba(0,212,170,0.15); color:var(--sat); border:1px solid rgba(0,212,170,0.3); }
-  .type-hybrid { background:rgba(255,159,28,0.15); color:var(--hyb); border:1px solid rgba(255,159,28,0.3); }
-  .thc-pill {
-    font-family:'DM Mono',monospace; font-size:0.7rem;
-    color:var(--accent); background:rgba(200,255,110,0.08);
-    padding:2px 7px; border-radius:6px;
-  }
-  .expand-icon { color:var(--muted); font-size:1rem; transition: transform 0.2s; }
+  .strain-name { font-weight:600; font-size:0.95rem; }
+  .strain-meta { display:flex; gap:8px; align-items:center; margin-top:3px; }
+  
+  /* TYPE BADGES */
+  .type-badge { font-size:0.65rem; text-transform:uppercase; font-weight:700; padding:2px 8px; border-radius:4px; letter-spacing:0.5px; }
+  .type-indica { background:rgba(123,97,255,0.15); color:var(--ind); }
+  .type-sativa { background:rgba(0,212,170,0.15); color:var(--sat); }
+  .type-hybrid { background:rgba(255,159,28,0.15); color:var(--hyb); }
+  
+  .thc-pill { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--accent); }
+  .expand-icon { color:var(--muted); transition: transform 0.2s; }
   .strain-card.expanded .expand-icon { transform: rotate(180deg); }
 
   .strain-body { display:none; padding:0 16px 16px; border-top:1px solid var(--border); }
   .strain-card.expanded .strain-body { display:block; }
 
-  /* DETAIL SECTIONS */
   .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
-  .detail-box {
-    background: var(--surface);
-    border-radius:10px;
-    padding:12px;
-    border: 1px solid var(--border);
-  }
+  .detail-box { background: var(--surface); border-radius:10px; padding:12px; border: 1px solid var(--border); }
   .detail-box.full { grid-column: 1/-1; }
-  .detail-label {
-    font-size:0.62rem; color:var(--muted); text-transform:uppercase;
-    letter-spacing:1px; font-weight:600; margin-bottom:6px;
-    display:flex; align-items:center; gap:5px;
-  }
+  .detail-label { font-size:0.62rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; display:flex; align-items:center; gap:5px; }
   .detail-label .dot { width:6px; height:6px; border-radius:50%; display:inline-block; }
-  .detail-value { font-size:0.83rem; line-height:1.55; color:var(--text); }
+  .detail-value { font-size:0.83rem; color:var(--text); }
+  
+  .terp-tags { display:flex; flex-wrap:wrap; gap:5px; }
+  .terp-tag { font-family:'DM Mono',monospace; font-size:0.68rem; padding:3px 8px; border-radius:6px; background:rgba(123,97,255,0.1); color:#a89aff; }
 
-  .pros-list, .cons-list { list-style:none; display:flex; flex-direction:column; gap:4px; }
-  .pros-list li::before { content:"✓ "; color:var(--accent); font-weight:700; }
-  .cons-list li::before { content:"✗ "; color:var(--danger); }
-
-  .terp-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:4px; }
-  .terp-tag {
-    font-family:'DM Mono',monospace; font-size:0.68rem;
-    padding:3px 8px; border-radius:6px;
-    background: rgba(123,97,255,0.12); color:#a89aff;
-    border:1px solid rgba(123,97,255,0.2);
-  }
-
-  /* EDIT MODE */
-  .edit-area { width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border);
-    border-radius:8px; padding:10px; font-family:'DM Mono',monospace; font-size:0.75rem;
-    resize:vertical; min-height:120px; line-height:1.5; }
-  .edit-actions { display:flex; gap:8px; margin-top:8px; }
-
-  /* SHARE IMAGE CANVAS */
-  #shareModal {
-    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85);
-    z-index:999; overflow-y:auto; padding:20px;
-    backdrop-filter: blur(8px);
-  }
-  #shareModal.visible { display:flex; flex-direction:column; align-items:center; }
-  .modal-inner { background:var(--card); border-radius:16px; border:1px solid var(--border); max-width:560px; width:100%; overflow:hidden; }
-  .modal-header { padding:16px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
-  .modal-header h2 { font-family:'Bebas Neue',sans-serif; letter-spacing:2px; font-size:1.3rem; }
-  canvas#shareCanvas { display:block; max-width:100%; margin:0 auto; }
-  .modal-footer { padding:14px 20px; display:flex; gap:10px; border-top:1px solid var(--border); }
-  .canvas-wrap { padding:16px; background:#111; display:flex; justify-content:center; overflow-x:auto; }
-
-  /* THC BAR */
-  .thc-bar-wrap { margin-top:8px; }
-  .thc-bar-bg { background:var(--border); border-radius:4px; height:6px; overflow:hidden; }
-  .thc-bar-fill { height:100%; border-radius:4px; background: linear-gradient(90deg, var(--accent2), var(--accent)); transition:width 0.8s ease; }
-
-  /* ALERT */
-  .unlabeled-note {
-    margin:0 16px 10px;
-    background: rgba(255,159,28,0.1);
-    border:1px solid rgba(255,159,28,0.3);
-    border-radius:10px;
-    padding:10px 14px;
-    font-size:0.78rem;
-    color:var(--accent2);
-  }
-
-  .section-divider { padding:6px 16px; font-size:0.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; }
+  .edit-area { width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:10px; font-family:'DM Mono',monospace; font-size:0.75rem; min-height:100px; }
 </style>
 </head>
 <body>
 
 <div class="header">
   <h1>STRAIN GUIDE</h1>
-  <p id="strainCount">Loading Strains...</p>
+  <p id="strainCount">Loading...</p>
   <div class="header-actions">
-    <button class="btn btn-primary" onclick="openShareModal()">📸 Share Image</button>
     <button class="btn btn-ghost" onclick="toggleAll()">Expand All</button>
     <button class="btn btn-ghost" onclick="toggleEditMode()">✏️ Edit Data</button>
   </div>
@@ -201,98 +129,66 @@
 
 <div class="filters">
   <button class="filter-chip active" id="filterAll" onclick="filterStrains('all', this)">All</button>
-  <button class="filter-chip" onclick="filterStrains('indica', this)">Indica</button>
-  <button class="filter-chip" onclick="filterStrains('sativa', this)">Sativa</button>
-  <button class="filter-chip" onclick="filterStrains('hybrid', this)">Hybrid</button>
-  <button class="filter-chip" onclick="filterStrains('high-thc', this)">High THC (25%+)</button>
-  <button class="filter-chip" onclick="filterStrains('chill', this)">Chill/Sleep</button>
-  <button class="filter-chip" onclick="filterStrains('creative', this)">Creative/Social</button>
+  <button class="filter-chip" onclick="filterStrains('sleepy', this)">😴 Sleepy</button>
+  <button class="filter-chip" onclick="filterStrains('talkative', this)">🗣️ Talkative</button>
+  <button class="filter-chip" onclick="filterStrains('energy', this)">⚡ Energy</button>
+  <button class="filter-chip" onclick="filterStrains('pain', this)">🩹 Pain Relief</button>
+  <button class="filter-chip" onclick="filterStrains('creative', this)">🎨 Creative</button>
 </div>
 
 <div class="strain-list" id="strainList"></div>
 
-<div id="shareModal">
-  <div class="modal-inner">
-    <div class="modal-header">
-      <h2>Share Image</h2>
-      <button class="btn btn-ghost btn-sm" onclick="closeShareModal()">✕ Close</button>
-    </div>
-    <div class="canvas-wrap">
-      <canvas id="shareCanvas"></canvas>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-primary" onclick="downloadImage()">⬇️ Save Image</button>
-      <button class="btn btn-ghost btn-sm" onclick="closeShareModal()">Cancel</button>
-    </div>
-  </div>
-</div>
-
 <script>
-// ============================================================
-// 2. MODIFIED: CONNECT TO SUPABASE
-// ============================================================
-const supabaseUrl = 'https://lukkvyjkkwrtbshzombo.supabase.co';
-const supabaseKey = 'sb_publishable_vw0EbFO3Y2V4k95ONkm3Rw_4PovdtRO'; 
-const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+const SB_URL = 'https://lukkvyjkkwrtbshzcmbo.supabase.co';
+const SB_KEY = 'PASTE_YOUR_SB_PUBLISHABLE_KEY_HERE'; 
+const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
 let strains = [];
 let editMode = false;
 let allExpanded = false;
-let currentFilter = 'all';
 
-async function fetchStrainsFromCloud() {
-    const { data, error } = await _supabase
-        .from('strains')
-        .select('*')
-        .order('name', { ascending: true });
-
-    if (error) {
-        console.error("Cloud Error:", error);
-        document.getElementById('strainCount').innerText = "Error loading data.";
-    } else {
-        strains = data;
-        document.getElementById('strainCount').innerText = `${strains.length} Strains · Tap to expand`;
-        document.getElementById('filterAll').innerText = `All (${strains.length})`;
-        renderStrains(currentFilter);
-    }
+async function fetchStrains() {
+  const { data, error } = await _supabase.from('strains').select('*').order('name');
+  if (error) {
+    document.getElementById('strainCount').innerText = "Error loading data.";
+    return;
+  }
+  strains = data;
+  document.getElementById('strainCount').innerText = `${strains.length} Strains Available`;
+  renderStrains('all');
 }
 
 function renderStrains(filter) {
   const list = document.getElementById('strainList');
   list.innerHTML = '';
+  
   let filtered = strains;
-  if (filter === 'indica') filtered = strains.filter(s => s.type === 'indica');
-  else if (filter === 'sativa') filtered = strains.filter(s => s.type === 'sativa');
-  else if (filter === 'hybrid') filtered = strains.filter(s => s.type === 'hybrid');
-  else if (filter === 'high-thc') filtered = strains.filter(s => s.thcNum >= 25);
-  else if (filter === 'chill') filtered = strains.filter(s => s.tags?.includes('chill'));
-  else if (filter === 'creative') filtered = strains.filter(s => s.tags?.includes('creative'));
+  if (filter === 'sleepy') filtered = strains.filter(s => s.tags?.toLowerCase().includes('sleepy') || s.bestFor?.toLowerCase().includes('sleep'));
+  else if (filter === 'talkative') filtered = strains.filter(s => s.tags?.toLowerCase().includes('talkative') || s.tags?.toLowerCase().includes('social'));
+  else if (filter === 'energy') filtered = strains.filter(s => s.tags?.toLowerCase().includes('energy') || s.tags?.toLowerCase().includes('focus'));
+  else if (filter === 'pain') filtered = strains.filter(s => s.tags?.toLowerCase().includes('pain') || s.bestFor?.toLowerCase().includes('relief'));
+  else if (filter === 'creative') filtered = strains.filter(s => s.tags?.toLowerCase().includes('creative'));
 
   filtered.forEach((s, i) => {
-    const idx = strains.indexOf(s);
     const card = document.createElement('div');
-    card.className = 'strain-card';
-    card.id = `card-${idx}`;
-
-    const thcPct = Math.min((s.thcNum / 35) * 100, 100);
-    const typeClass = `type-${s.type}`;
+    card.className = `strain-card ${allExpanded ? 'expanded' : ''}`;
+    card.id = `card-${i}`;
+    
+    const typeClass = `type-${s.type?.toLowerCase()}`;
 
     card.innerHTML = `
-      <div class="strain-header" onclick="toggleCard(${idx})">
+      <div class="strain-header" onclick="toggleCard(${i})">
         <span class="strain-num">${String(i+1).padStart(2,'0')}</span>
         <div class="strain-info">
           <div class="strain-name">${s.name}</div>
           <div class="strain-meta">
-            <span class="type-badge ${typeClass}">${s.type}</span>
-            <span class="thc-pill">THC ${s.thc}</span>
+            <span class="type-badge ${typeClass}">${s.type || 'Hybrid'}</span>
+            <span class="thc-pill">THC ${s.thc || '??%'}</span>
           </div>
         </div>
         <span class="expand-icon">▾</span>
       </div>
       <div class="strain-body">
-        <div class="thc-bar-wrap">
-          <div class="thc-bar-bg"><div class="thc-bar-fill" style="width:${thcPct}%"></div></div>
-        </div>
         <div class="detail-grid">
           <div class="detail-box full">
             <div class="detail-label"><span class="dot" style="background:var(--muted)"></span>Genetics</div>
@@ -300,33 +196,18 @@ function renderStrains(filter) {
           </div>
           <div class="detail-box full">
             <div class="detail-label"><span class="dot" style="background:var(--accent3)"></span>Terpenes</div>
-            <div class="terp-tags">${s.terpenes?.map(t=>`<span class="terp-tag">${t}</span>`).join('') || 'None listed'}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label"><span class="dot" style="background:var(--accent)"></span>Pros</div>
-            <ul class="pros-list detail-value">${s.pros?.map(p=>`<li>${p}</li>`).join('') || '<li>None</li>'}</ul>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label"><span class="dot" style="background:var(--danger)"></span>Cons</div>
-            <ul class="cons-list detail-value">${s.cons?.map(c=>`<li>${c}</li>`).join('') || '<li>None</li>'}</ul>
+            <div class="terp-tags">${Array.isArray(s.terpenes) ? s.terpenes.map(t=>`<span class="terp-tag">${t}</span>`).join('') : s.terpenes || 'None'}</div>
           </div>
           <div class="detail-box full">
-            <div class="detail-label"><span class="dot" style="background:var(--accent2)"></span>Flavor</div>
-            <div class="detail-value">${s.flavor || 'Unknown'}</div>
-          </div>
-          <div class="detail-box full">
-            <div class="detail-label"><span class="dot" style="background:var(--sat)"></span>Best For</div>
-            <div class="detail-value">${s.bestFor || 'General use'}</div>
+            <div class="detail-label"><span class="dot" style="background:var(--accent2)"></span>Best For</div>
+            <div class="detail-value">${s.bestFor || 'General Use'}</div>
           </div>
           ${editMode ? `
-          <div class="detail-box full">
-            <div class="detail-label">✏️ Edit (JSON)</div>
-            <textarea class="edit-area" id="edit-${idx}">${JSON.stringify(s, null, 2)}</textarea>
-            <div class="edit-actions">
-              <button class="btn btn-primary btn-sm" onclick="saveEdit(${idx})">Save to Cloud</button>
-              <button class="btn btn-ghost btn-sm" onclick="cancelEdit(${idx})">Cancel</button>
+            <div class="detail-box full">
+              <textarea class="edit-area" id="edit-${s.id}">${JSON.stringify(s, null, 2)}</textarea>
+              <button class="btn btn-primary" style="margin-top:10px" onclick="saveToCloud(${s.id})">Save Changes</button>
             </div>
-          </div>` : ''}
+          ` : ''}
         </div>
       </div>
     `;
@@ -334,234 +215,23 @@ function renderStrains(filter) {
   });
 }
 
-function toggleCard(idx) {
-  const card = document.getElementById(`card-${idx}`);
-  if (card) card.classList.toggle('expanded');
-}
-
-function toggleAll() {
-  allExpanded = !allExpanded;
-  document.querySelectorAll('.strain-card').forEach(c => {
-    c.classList.toggle('expanded', allExpanded);
-  });
-}
+function toggleCard(i) { document.getElementById(`card-${i}`).classList.toggle('expanded'); }
 
 function filterStrains(type, btn) {
-  currentFilter = type;
   document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
   renderStrains(type);
 }
 
-function toggleEditMode() {
-  editMode = !editMode;
-  renderStrains(currentFilter);
+function toggleEditMode() { editMode = !editMode; renderStrains('all'); }
+
+function toggleAll() { 
+  allExpanded = !allExpanded; 
+  document.querySelectorAll('.strain-card').forEach(c => c.classList.toggle('expanded', allExpanded)); 
 }
 
-// 3. MODIFIED: SAVE DIRECTLY TO SUPABASE
-async function saveEdit(idx) {
-  try {
-    const raw = document.getElementById(`edit-${idx}`).value;
-    const updatedStrain = JSON.parse(raw);
-    
-    // Update Supabase
-    const { error } = await _supabase
-        .from('strains')
-        .update(updatedStrain)
-        .eq('id', updatedStrain.id);
-
-    if (error) throw error;
-    
-    alert('Cloud Updated!');
-    fetchStrainsFromCloud();
-  } catch(e) { alert('Error: ' + e.message); }
-}
-
-function cancelEdit(idx) {
-  renderStrains(currentFilter);
-}
-
-// ============================================================
-// CANVAS IMAGE GENERATION
-// ============================================================
-function openShareModal() {
-  document.getElementById('shareModal').classList.add('visible');
-  generateShareImage();
-}
-function closeShareModal() {
-  document.getElementById('shareModal').classList.remove('visible');
-}
-
-function generateShareImage() {
-  const canvas = document.getElementById('shareCanvas');
-  const COLS = 3;
-  const ROWS = Math.ceil(strains.length / COLS);
-  const CARD_W = 200, CARD_H = 170, PAD = 16;
-  const W = COLS * CARD_W + (COLS + 1) * PAD;
-  const HEADER_H = 100;
-  const H = HEADER_H + ROWS * CARD_H + (ROWS + 1) * PAD + 30;
-
-  canvas.width = W;
-  canvas.height = H;
-  const ctx = canvas.getContext('2d');
-
-  // BG
-  ctx.fillStyle = '#0d0d0f';
-  ctx.fillRect(0, 0, W, H);
-
-  // Header gradient bar
-  const grad = ctx.createLinearGradient(0, 0, W, 0);
-  grad.addColorStop(0, '#c8ff6e');
-  grad.addColorStop(1, '#ff9f1c');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, W, 5);
-
-  // Title
-  ctx.fillStyle = '#c8ff6e';
-  ctx.font = 'bold 28px Georgia, serif';
-  ctx.fillText('STRAIN GUIDE', PAD, 44);
-
-  ctx.fillStyle = '#888899';
-  ctx.font = '12px monospace';
-  ctx.fillText(`${strains.length} Strains`, PAD, 62);
-
-  // Unlabeled warning
-  ctx.fillStyle = '#ff9f1c';
-  ctx.font = 'bold 11px sans-serif';
-  ctx.fillText('⚠ One tin unlabeled — check with supplier', PAD, 84);
-
-  const typeColors = { indica: '#7b61ff', sativa: '#00d4aa', hybrid: '#ff9f1c' };
-
-  strains.forEach((s, i) => {
-    const col = i % COLS;
-    const row = Math.floor(i / COLS);
-    const x = PAD + col * (CARD_W + PAD);
-    const y = HEADER_H + PAD + row * (CARD_H + PAD);
-
-    // Card bg
-    ctx.fillStyle = '#1e1e24';
-    roundRect(ctx, x, y, CARD_W, CARD_H, 12);
-    ctx.fill();
-
-    // Accent line top
-    const cardGrad = ctx.createLinearGradient(x, y, x + CARD_W, y);
-    cardGrad.addColorStop(0, typeColors[s.type] || '#888');
-    cardGrad.addColorStop(1, '#2a2a35');
-    ctx.fillStyle = cardGrad;
-    roundRect(ctx, x, y, CARD_W, 3, [12, 12, 0, 0]);
-    ctx.fill();
-
-    // Number
-    ctx.fillStyle = '#44445a';
-    ctx.font = 'bold 11px monospace';
-    ctx.fillText(String(i + 1).padStart(2, '0'), x + 10, y + 20);
-
-    // Name
-    ctx.fillStyle = '#f0f0f5';
-    ctx.font = 'bold 13px sans-serif';
-    wrapText(ctx, s.name, x + 10, y + 36, CARD_W - 14, 14);
-
-    // Type badge
-    ctx.fillStyle = typeColors[s.type] + '33';
-    roundRect(ctx, x + 10, y + 45, 52, 16, 8);
-    ctx.fill();
-    ctx.fillStyle = typeColors[s.type];
-    ctx.font = '9px sans-serif';
-    ctx.fillText(s.type.toUpperCase(), x + 16, y + 57);
-
-    // THC
-    ctx.fillStyle = 'rgba(200,255,110,0.1)';
-    roundRect(ctx, x + 70, y + 45, 60, 16, 8);
-    ctx.fill();
-    ctx.fillStyle = '#c8ff6e';
-    ctx.font = '9px monospace';
-    ctx.fillText('THC ' + s.thc, x + 75, y + 57);
-
-    // Terpenes label
-    ctx.fillStyle = '#888899';
-    ctx.font = '9px sans-serif';
-    ctx.fillText('TERPENES', x + 10, y + 78);
-
-    // Terpene pills
-    let tx = x + 10;
-    let ty = y + 84;
-    s.terpenes?.slice(0, 3).forEach(terp => {
-      const tw = ctx.measureText(terp).width + 12;
-      if (tx + tw > x + CARD_W - 8) { tx = x + 10; ty += 16; }
-      ctx.fillStyle = 'rgba(123,97,255,0.18)';
-      roundRect(ctx, tx, ty, tw, 13, 6);
-      ctx.fill();
-      ctx.fillStyle = '#a89aff';
-      ctx.font = '8px monospace';
-      ctx.fillText(terp, tx + 6, ty + 10);
-      tx += tw + 4;
-    });
-
-    // Divider
-    ctx.strokeStyle = '#2a2a35';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(x + 10, y + 110);
-    ctx.lineTo(x + CARD_W - 10, y + 110);
-    ctx.stroke();
-
-    // Best For
-    ctx.fillStyle = '#666677';
-    ctx.font = '8px sans-serif';
-    ctx.fillText('BEST FOR', x + 10, y + 124);
-    ctx.fillStyle = '#aaaacc';
-    ctx.font = '9px sans-serif';
-    wrapText(ctx, s.bestFor || '', x + 10, y + 137, CARD_W - 16, 10, 2);
-  });
-
-  // Footer
-  ctx.fillStyle = '#3a3a4a';
-  ctx.font = '9px monospace';
-  ctx.fillText('Generated with Strain Guide App', PAD, H - 10);
-}
-
-function roundRect(ctx, x, y, w, h, r) {
-  if (typeof r === 'number') r = [r,r,r,r];
-  ctx.beginPath();
-  ctx.moveTo(x + r[0], y);
-  ctx.lineTo(x + w - r[1], y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + r[1]);
-  ctx.lineTo(x + w, y + h - r[2]);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - r[2], y + h);
-  ctx.lineTo(x + r[3], y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - r[3]);
-  ctx.lineTo(x, y + r[0]);
-  ctx.quadraticCurveTo(x, y, x + r[0], y);
-  ctx.closePath();
-}
-
-function wrapText(ctx, text, x, y, maxW, lineH, maxLines = 1) {
-  if(!text) return;
-  const words = text.split(' ');
-  let line = '', lines = [], lc = 0;
-  for (const w of words) {
-    const test = line + (line ? ' ' : '') + w;
-    if (ctx.measureText(test).width > maxW) {
-      if (line) lines.push(line);
-      line = w;
-      lc++;
-      if (lc >= maxLines) { lines.push(line + '…'); return; }
-    } else { line = test; }
-  }
-  if (line) lines.push(line);
-  lines.slice(0, maxLines).forEach((l, i) => ctx.fillText(l, x, y + i * lineH));
-}
-
-function downloadImage() {
-  const canvas = document.getElementById('shareCanvas');
-  const link = document.createElement('a');
-  link.download = 'strain-guide.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-}
-
-// 4. MODIFIED: START BY FETCHING DATA
-document.addEventListener('DOMContentLoaded', fetchStrainsFromCloud);
+fetchStrains();
 </script>
 </body>
 </html>
+
