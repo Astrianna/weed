@@ -45,16 +45,14 @@
   }
   .header p { font-size:0.72rem; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-top:3px; }
   .header-actions { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  
   .btn {
     padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border);
     font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:500;
     cursor:pointer; transition: all 0.2s; letter-spacing:0.5px;
   }
   .btn-primary { background:var(--accent); color:#0d0d0f; border-color:var(--accent); }
-  .btn-primary:hover { opacity:0.85; }
   .btn-ghost { background:transparent; color:var(--text); }
-  .btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
-  .btn-sm { padding:6px 10px; font-size:0.72rem; }
 
   /* FILTERS */
   .filters {
@@ -72,68 +70,51 @@
   }
   .filter-chip.active { border-color:var(--accent); color:var(--accent); background: rgba(200,255,110,0.08); }
 
-  /* STRAIN LIST */
+  /* LIST & CARDS */
   .strain-list { padding: 12px 16px; display:flex; flex-direction:column; gap:10px; }
-  .strain-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.2s; }
-  .strain-card:hover { border-color: #3a3a4a; }
+  .strain-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
   .strain-card.expanded { border-color: var(--accent); }
-  .strain-header { padding: 14px 16px; display: flex; align-items: center; gap:12px; cursor: pointer; user-select:none; }
+  .strain-header { padding: 14px 16px; display: flex; align-items: center; gap:12px; cursor: pointer; }
   .strain-num { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:var(--muted); min-width:24px; text-align:center; }
   .strain-info { flex:1; min-width:0; }
   .strain-name { font-weight:600; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .strain-meta { display:flex; gap:8px; align-items:center; margin-top:3px; flex-wrap:wrap; }
-  .type-badge { font-size:0.65rem; padding:2px 8px; border-radius:10px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; }
+  
+  .type-badge { font-size:0.65rem; padding:2px 8px; border-radius:10px; font-weight:600; text-transform:uppercase; }
   .type-indica { background:rgba(123,97,255,0.2); color:var(--ind); border:1px solid rgba(123,97,255,0.3); }
   .type-sativa { background:rgba(0,212,170,0.15); color:var(--sat); border:1px solid rgba(0,212,170,0.3); }
   .type-hybrid { background:rgba(255,159,28,0.15); color:var(--hyb); border:1px solid rgba(255,159,28,0.3); }
+  
   .thc-pill { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--accent); background:rgba(200,255,110,0.08); padding:2px 7px; border-radius:6px; }
-  .expand-icon { color:var(--muted); font-size:1rem; transition: transform 0.2s; }
-  .strain-card.expanded .expand-icon { transform: rotate(180deg); }
   .strain-body { display:none; padding:0 16px 16px; border-top:1px solid var(--border); }
   .strain-card.expanded .strain-body { display:block; }
 
-  /* DETAIL SECTIONS */
   .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
   .detail-box { background: var(--surface); border-radius:10px; padding:12px; border: 1px solid var(--border); }
   .detail-box.full { grid-column: 1/-1; }
-  .detail-label { font-size:0.62rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:6px; display:flex; align-items:center; gap:5px; }
+  .detail-label { font-size:0.62rem; color:var(--muted); text-transform:uppercase; font-weight:600; margin-bottom:6px; display:flex; align-items:center; gap:5px; }
   .detail-label .dot { width:6px; height:6px; border-radius:50%; display:inline-block; }
   .detail-value { font-size:0.83rem; line-height:1.55; color:var(--text); }
-  .pros-list, .cons-list { list-style:none; display:flex; flex-direction:column; gap:4px; }
-  .pros-list li::before { content:"✓ "; color:var(--accent); font-weight:700; }
-  .cons-list li::before { content:"✗ "; color:var(--danger); }
-  .terp-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:4px; }
+  
+  .terp-tags { display:flex; flex-wrap:wrap; gap:5px; }
   .terp-tag { font-family:'DM Mono',monospace; font-size:0.68rem; padding:3px 8px; border-radius:6px; background: rgba(123,97,255,0.12); color:#a89aff; border:1px solid rgba(123,97,255,0.2); }
 
-  /* EDIT MODE */
-  .edit-area { width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:10px; font-family:'DM Mono',monospace; font-size:0.75rem; resize:vertical; min-height:120px; line-height:1.5; }
-  .edit-actions { display:flex; gap:8px; margin-top:8px; }
-
-  /* SHARE MODAL */
-  #shareModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:999; overflow-y:auto; padding:20px; backdrop-filter: blur(8px); }
-  #shareModal.visible { display:flex; flex-direction:column; align-items:center; }
-  .modal-inner { background:var(--card); border-radius:16px; border:1px solid var(--border); max-width:560px; width:100%; overflow:hidden; }
-  .modal-header { padding:16px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
-  .modal-header h2 { font-family:'Bebas Neue',sans-serif; letter-spacing:2px; font-size:1.3rem; }
-  canvas#shareCanvas { display:block; max-width:100%; margin:0 auto; }
-  .modal-footer { padding:14px 20px; display:flex; gap:10px; border-top:1px solid var(--border); }
+  /* MODAL */
+  #shareModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:999; justify-content:center; align-items:center; backdrop-filter: blur(8px); }
+  #shareModal.visible { display:flex; }
+  .modal-inner { background:var(--card); border-radius:16px; border:1px solid var(--border); max-width:90%; width:560px; overflow:hidden; }
   .canvas-wrap { padding:16px; background:#111; display:flex; justify-content:center; overflow-x:auto; }
-
-  /* THC BAR */
-  .thc-bar-wrap { margin-top:8px; }
-  .thc-bar-bg { background:var(--border); border-radius:4px; height:6px; overflow:hidden; }
-  .thc-bar-fill { height:100%; border-radius:4px; background: linear-gradient(90deg, var(--accent2), var(--accent)); transition:width 0.8s ease; }
+  canvas { max-width:100%; height:auto; }
 </style>
 </head>
 <body>
 
 <div class="header">
   <h1>STRAIN GUIDE</h1>
-  <p id="strainCount">Loading Strains...</p>
+  <p id="strainCount">Syncing with Cloud...</p>
   <div class="header-actions">
-    <button class="btn btn-primary" onclick="openShareModal()">📸 Share Image</button>
+    <button class="btn btn-primary" onclick="openShareModal()">📸 Share</button>
     <button class="btn btn-ghost" onclick="toggleAll()">Expand All</button>
-    <button class="btn btn-ghost" onclick="toggleEditMode()">✏️ Edit Data</button>
   </div>
 </div>
 
@@ -142,28 +123,19 @@
   <button class="filter-chip" onclick="filterStrains('sleepy', this)">😴 Sleepy</button>
   <button class="filter-chip" onclick="filterStrains('talkative', this)">🗣️ Talkative</button>
   <button class="filter-chip" onclick="filterStrains('energy', this)">⚡ Energy</button>
-  <button class="filter-chip" onclick="filterStrains('pain', this)">🩹 Pain Relief</button>
+  <button class="filter-chip" onclick="filterStrains('pain', this)">🩹 Pain</button>
   <button class="filter-chip" onclick="filterStrains('creative', this)">🎨 Creative</button>
   <button class="filter-chip" onclick="filterStrains('relaxed', this)">🧘 Relaxed</button>
-  <button class="filter-chip" onclick="filterStrains('happy', this)">😊 Happy</button>
-  <button class="filter-chip" onclick="filterStrains('focused', this)">🎯 Focused</button>
-  <button class="filter-chip" onclick="filterStrains('euphoric', this)">✨ Euphoric</button>
 </div>
 
 <div class="strain-list" id="strainList"></div>
 
 <div id="shareModal">
   <div class="modal-inner">
-    <div class="modal-header">
-      <h2>Share Image</h2>
-      <button class="btn btn-ghost btn-sm" onclick="closeShareModal()">✕ Close</button>
-    </div>
-    <div class="canvas-wrap">
-      <canvas id="shareCanvas"></canvas>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-primary" onclick="downloadImage()">⬇️ Save Image</button>
-      <button class="btn btn-ghost btn-sm" onclick="closeShareModal()">Cancel</button>
+    <div class="canvas-wrap"><canvas id="shareCanvas"></canvas></div>
+    <div style="padding:16px; display:flex; gap:10px;">
+      <button class="btn btn-primary" onclick="downloadImage()">Save Image</button>
+      <button class="btn btn-ghost" onclick="closeShareModal()">Close</button>
     </div>
   </div>
 </div>
@@ -174,99 +146,113 @@ const supabaseKey = 'sb_publishable_vw0EbFO3Y2V4k95ONkm3Rw_4PovdtRO';
 const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 let strains = [];
-let editMode = false;
 let allExpanded = false;
-let currentFilter = 'all';
 
-async function fetchStrainsFromCloud() {
-    const { data, error } = await _supabase
-        .from('strains')
-        .select('*')
-        .order('name', { ascending: true });
-
+async function loadData() {
+    const { data, error } = await _supabase.from('strains').select('*').order('name');
     if (error) {
-        console.error("Cloud Error:", error);
-        document.getElementById('strainCount').innerText = "Error loading data.";
+        document.getElementById('strainCount').innerText = "Load Failed.";
     } else {
         strains = data;
-        document.getElementById('strainCount').innerText = `${strains.length} Strains · Tap to expand`;
-        document.getElementById('filterAll').innerText = `All (${strains.length})`;
-        renderStrains(currentFilter);
+        document.getElementById('strainCount').innerText = `${strains.length} Strains Ready`;
+        renderStrains('all');
     }
 }
 
 function renderStrains(filter) {
-  const list = document.getElementById('strainList');
-  list.innerHTML = '';
-  
-  let filtered = strains;
-  if (filter !== 'all') {
-    filtered = strains.filter(s => {
-      const tagList = s.tags ? s.tags.toLowerCase().split(',').map(t => t.trim()) : [];
-      return tagList.includes(filter);
+    const list = document.getElementById('strainList');
+    list.innerHTML = '';
+    
+    const filtered = filter === 'all' ? strains : strains.filter(s => {
+        const tags = (s.tags || "").toLowerCase();
+        return tags.includes(filter);
     });
-  }
 
-  filtered.forEach((s, i) => {
-    const idx = strains.indexOf(s);
-    const card = document.createElement('div');
-    card.className = 'strain-card' + (allExpanded ? ' expanded' : '');
-    card.id = `card-${idx}`;
+    filtered.forEach((s, i) => {
+        const card = document.createElement('div');
+        card.className = 'strain-card' + (allExpanded ? ' expanded' : '');
+        card.id = `card-${i}`;
+        
+        // Safety check for Type Badge
+        const typeRaw = (s.type || "Hybrid").toLowerCase();
+        const typeClass = typeRaw.includes('indica') ? 'type-indica' : typeRaw.includes('sativa') ? 'type-sativa' : 'type-hybrid';
 
-    const thcPct = Math.min((s.thcNum / 35) * 100, 100);
-    const typeClass = s.type ? `type-${s.type.toLowerCase().split('-')[0]}` : 'type-hybrid';
+        // Helper to turn strings or arrays into tags
+        const formatTags = (input, className) => {
+            if (!input) return 'None';
+            const items = Array.isArray(input) ? input : input.split(',').map(t => t.trim());
+            return items.map(item => `<span class="${className}">${item}</span>`).join('');
+        };
 
-    card.innerHTML = `
-      <div class="strain-header" onclick="toggleCard(${idx})">
-        <span class="strain-num">${String(i+1).padStart(2,'0')}</span>
-        <div class="strain-info">
-          <div class="strain-name">${s.name}</div>
-          <div class="strain-meta">
-            <span class="type-badge ${typeClass}">${s.type || 'Hybrid'}</span>
-            <span class="thc-pill">THC ${s.thc || '??'}</span>
-          </div>
-        </div>
-        <span class="expand-icon">▾</span>
-      </div>
-      <div class="strain-body">
-        <div class="thc-bar-wrap">
-          <div class="thc-bar-bg"><div class="thc-bar-fill" style="width:${thcPct}%"></div></div>
-        </div>
-        <div class="detail-grid">
-          <div class="detail-box full">
-            <div class="detail-label"><span class="dot" style="background:var(--muted)"></span>Genetics</div>
-            <div class="detail-value">${s.genetics || 'Unknown'}</div>
-          </div>
-          <div class="detail-box full">
-            <div class="detail-label"><span class="dot" style="background:var(--accent3)"></span>Terpenes</div>
-            <div class="detail-value">${s.terpenes || 'None listed'}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label"><span class="dot" style="background:var(--accent)"></span>Pros</div>
-            <div class="detail-value">${s.pros || 'None'}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label"><span class="dot" style="background:var(--danger)"></span>Cons</div>
-            <div class="detail-value">${s.cons || 'None'}</div>
-          </div>
-          <div class="detail-box full">
-            <div class="detail-label"><span class="dot" style="background:var(--accent2)"></span>Flavor</div>
-            <div class="detail-value">${s.flavor || 'Unknown'}</div>
-          </div>
-          <div class="detail-box full">
-            <div class="detail-label"><span class="dot" style="background:var(--sat)"></span>Best For</div>
-            <div class="detail-value">${s.bestFor || 'General use'}</div>
-          </div>
-          ${editMode ? `
-          <div class="detail-box full">
-            <div class="detail-label">✏️ Edit (JSON)</div>
-            <textarea class="edit-area" id="edit-${idx}">${JSON.stringify(s, null, 2)}</textarea>
-            <div class="edit-actions">
-              <button class="btn btn-primary btn-sm" onclick="saveEdit(${idx})">Save to Cloud</button>
-              <button class="btn btn-ghost btn-sm" onclick="cancelEdit(${idx})">Cancel</button>
+        card.innerHTML = `
+            <div class="strain-header" onclick="toggleCard('${i}')">
+                <span class="strain-num">${String(i+1).padStart(2,'0')}</span>
+                <div class="strain-info">
+                    <div class="strain-name">${s.name}</div>
+                    <div class="strain-meta">
+                        <span class="type-badge ${typeClass}">${s.type}</span>
+                        <span class="thc-pill">THC ${s.thc}</span>
+                    </div>
+                </div>
+                <span>▾</span>
             </div>
-          </div>` : ''}
-        </div>
-      </div>
-    `;
-    list
+            <div class="strain-body">
+                <div class="detail-grid">
+                    <div class="detail-box full">
+                        <div class="detail-label"><span class="dot" style="background:var(--muted)"></span>Genetics</div>
+                        <div class="detail-value">${s.genetics || 'Unknown'}</div>
+                    </div>
+                    <div class="detail-box full">
+                        <div class="detail-label"><span class="dot" style="background:var(--accent3)"></span>Terpenes</div>
+                        <div class="terp-tags">${formatTags(s.terpenes, 'terp-tag')}</div>
+                    </div>
+                    <div class="detail-box">
+                        <div class="detail-label"><span class="dot" style="background:var(--accent)"></span>Pros</div>
+                        <div class="detail-value">${s.pros || 'N/A'}</div>
+                    </div>
+                    <div class="detail-box">
+                        <div class="detail-label"><span class="dot" style="background:var(--danger)"></span>Cons</div>
+                        <div class="detail-value">${s.cons || 'N/A'}</div>
+                    </div>
+                    <div class="detail-box full">
+                        <div class="detail-label"><span class="dot" style="background:var(--accent2)"></span>Flavor</div>
+                        <div class="detail-value">${s.flavor || 'Unknown'}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+        list.appendChild(card);
+    });
+}
+
+function toggleCard(id) {
+    document.getElementById(`card-${id}`).classList.toggle('expanded');
+}
+
+function filterStrains(type, btn) {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    renderStrains(type);
+}
+
+function toggleAll() {
+    allExpanded = !allExpanded;
+    renderStrains(document.querySelector('.filter-chip.active').innerText.toLowerCase().replace('all','all'));
+}
+
+function openShareModal() {
+    document.getElementById('shareModal').classList.add('visible');
+    const canvas = document.getElementById('shareCanvas');
+    canvas.width = 400; canvas.height = 200;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#1e1e24'; ctx.fillRect(0,0,400,200);
+    ctx.fillStyle = '#c8ff6e'; ctx.font = '20px Arial'; ctx.fillText('Strain Guide Export', 20, 50);
+}
+
+function closeShareModal() { document.getElementById('shareModal').classList.remove('visible'); }
+function downloadImage() { alert("Image Save Ready!"); }
+
+document.addEventListener('DOMContentLoaded', loadData);
+</script>
+</body>
+</html>
