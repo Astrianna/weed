@@ -134,7 +134,6 @@
   <button class="filter-chip" onclick="filterStrains('energy', this)">⚡ Energy</button>
   <button class="filter-chip" onclick="filterStrains('pain', this)">🩹 Pain Relief</button>
   <button class="filter-chip" onclick="filterStrains('creative', this)">🎨 Creative</button>
-  <!-- New filters -->
   <button class="filter-chip" onclick="filterStrains('relaxed', this)">🛋️ Relaxed</button>
   <button class="filter-chip" onclick="filterStrains('euphoric', this)">😊 Euphoric</button>
   <button class="filter-chip" onclick="filterStrains('happy', this)">😄 Happy</button>
@@ -146,7 +145,8 @@
 
 <script>
 const SB_URL = 'https://lukkvyjkkwrtbshzcmbo.supabase.co';
-const SB_KEY = 'sb_publishable_vw0EbFO3Y2V4k95ONkm3Rw_4PovdtRO'; 
+const SB_KEY = 'sb_publishable_vw0EbFO3Y2V4k95ONkm3Rw_4PovdtRO';
+
 const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
 let strains = [];
@@ -154,14 +154,25 @@ let editMode = false;
 let allExpanded = false;
 
 async function fetchStrains() {
-  const { data, error } = await _supabase.from('strains').select('*').order('name');
-  if (error) {
-    document.getElementById('strainCount').innerText = "Error loading data.";
-    return;
+  try {
+    const { data, error } = await _supabase
+      .from('strains')
+      .select('*')
+      .order('name', { ascending: true });
+
+    if (error) throw error;
+
+    strains = data || [];
+    
+    document.getElementById('strainCount').innerText = 
+      `${strains.length} Strains Available`;
+
+    renderStrains('all');
+  } catch (err) {
+    console.error("Supabase fetch error:", err);
+    document.getElementById('strainCount').innerHTML = 
+      `Failed to load strains.<br><small style="color:#ff5252">Error: ${err.message || 'Check console (F12) for details'}</small>`;
   }
-  strains = data;
-  document.getElementById('strainCount').innerText = `${strains.length} Strains Available`;
-  renderStrains('all');
 }
 
 function renderStrains(filter) {
@@ -179,12 +190,27 @@ function renderStrains(filter) {
     });
   }
 
+  if (filtered.length === 0) {
+    list.innerHTML = `<p style="padding:40px 20px; color:var(--muted); text-align:center; font-size:0.9rem;">
+      No strains match this filter.
+    </p>`;
+    return;
+  }
+
   filtered.forEach((s, i) => {
     const card = document.createElement('div');
     card.className = `strain-card ${allExpanded ? 'expanded' : ''}`;
     card.id = `card-${i}`;
     
-    const typeClass = `type-${(s.type || 'hybrid').toLowerCase()}`;
+    const typeClass = `type-${(s.type || 'hybrid').toLowerCase().replace(/[^a-z]/g, '')}`;
+
+    let terpHTML = 'None';
+    if (s.terpenes) {
+      const terps = Array.isArray(s.terpenes) 
+        ? s.terpenes 
+        : String(s.terpenes).split(',').map(t => t.trim());
+      terpHTML = terps.map(t => `<span class="terp-tag">${t}</span>`).join('');
+    }
 
     card.innerHTML = `
       <div class="strain-header" onclick="toggleCard(${i})">
@@ -206,7 +232,7 @@ function renderStrains(filter) {
           </div>
           <div class="detail-box full">
             <div class="detail-label"><span class="dot" style="background:var(--accent3)"></span>Terpenes</div>
-            <div class="terp-tags">\( {Array.isArray(s.terpenes) ? s.terpenes.map(t=>`<span class="terp-tag"> \){t}</span>`).join('') : s.terpenes || 'None'}</div>
+            <div class="terp-tags">${terpHTML}</div>
           </div>
           <div class="detail-box full">
             <div class="detail-label"><span class="dot" style="background:var(--accent2)"></span>Best For</div>
@@ -214,8 +240,8 @@ function renderStrains(filter) {
           </div>
           ${editMode ? `
             <div class="detail-box full">
-              <textarea class="edit-area" id="edit-\( {s.id}"> \){JSON.stringify(s, null, 2)}</textarea>
-              <button class="btn btn-primary" style="margin-top:10px" onclick="saveToCloud(${s.id})">Save Changes</button>
+              <textarea class="edit-area" id="edit-\( {s.id || i}"> \){JSON.stringify(s, null, 2)}</textarea>
+              <button class="btn btn-primary" style="margin-top:10px" onclick="saveToCloud(${s.id || i})">Save Changes</button>
             </div>
           ` : ''}
         </div>
@@ -245,6 +271,7 @@ function toggleAll() {
   document.querySelectorAll('.strain-card').forEach(c => c.classList.toggle('expanded', allExpanded)); 
 }
 
+// Load the data
 fetchStrains();
 </script>
 </body>
