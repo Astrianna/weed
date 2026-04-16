@@ -3,292 +3,282 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Strain Guide</title>
+<title>Household 420 Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
-    --bg: #0d0d0f;
-    --surface: #16161a;
-    --card: #1e1e24;
-    --border: #2a2a35;
-    --accent: #c8ff6e;
-    --accent2: #ff9f1c;
-    --accent3: #7b61ff;
-    --text: #f0f0f5;
-    --muted: #888899;
-    --ind: #7b61ff;
-    --sat: #00d4aa;
-    --hyb: #ff9f1c;
-    --pro: #4ade80;
-    --con: #f87171;
+    --bg: #0d0d0f; --surface: #16161a; --card: #1e1e24; --border: #2a2a35;
+    --brand-green: #4ade80;
+    --text: #f0f0f5; --muted: #888899;
+    --indica: #a78bfa; --sativa: #fbbf24; --hybrid: #34d399;
+    --pro-text: #4ade80; --con-text: #f87171;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; padding-bottom: 50px; }
 
-  .header {
-    background: linear-gradient(135deg, #0d0d0f 0%, #1a1a24 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 20px 16px 16px;
-    position: sticky; top:0; z-index:100;
-    backdrop-filter: blur(12px);
-  }
-  .header h1 {
-    font-family:'Bebas Neue',sans-serif;
-    font-size: 2rem;
-    letter-spacing: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    line-height:1;
-  }
-  .header p { font-size:0.72rem; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-top:3px; }
-  .header-actions { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  .header { background: rgba(13,13,15,0.9); border-bottom: 1px solid var(--border); padding: 16px; position: sticky; top:0; z-index:100; backdrop-filter: blur(12px); display: flex; justify-content: space-between; align-items: center; }
+  .header h1 { font-family:'Bebas Neue'; font-size: 2.2rem; letter-spacing: 2px; color: var(--brand-green); }
   
-  .btn {
-    padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border);
-    font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:500;
-    cursor:pointer; transition: all 0.2s; letter-spacing:0.5px;
-  }
-  .btn-ghost { background:transparent; color:var(--text); }
-  .btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
+  .user-identity { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+  .user-avatar { width: 10px; height: 10px; border-radius: 50%; }
+  .user-name { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.8px; }
 
-  .filters {
-    padding: 12px 16px;
-    display:flex; gap:8px; overflow-x:auto;
-    border-bottom: 1px solid var(--border);
-    scrollbar-width: none;
-  }
-  .filters::-webkit-scrollbar { display:none; }
-  .filter-chip {
-    white-space:nowrap; padding: 5px 12px; border-radius:20px;
-    border: 1px solid var(--border); background:transparent;
-    color:var(--muted); font-size:0.75rem; cursor:pointer;
-    transition: all 0.2s;
-  }
-  .filter-chip.active { border-color:var(--accent); color:var(--accent); background: rgba(200,255,110,0.08); }
-
-  .strain-list { padding: 12px 16px; display:flex; flex-direction:column; gap:12px; }
-  .strain-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-  }
-  .strain-card.expanded { border-color: var(--accent); }
-
-  .strain-header {
-    padding: 14px 16px;
-    display: flex; align-items: center; gap:12px;
-    cursor: pointer;
-  }
-  .strain-num { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:var(--muted); min-width:24px; }
-  .strain-info { flex:1; min-width:0; }
-  .strain-name { font-weight:600; font-size:0.95rem; }
-  .strain-meta { display:flex; gap:8px; align-items:center; margin-top:3px; flex-wrap:wrap; }
-
-  .type-badge { 
-    font-size:0.65rem; text-transform:uppercase; font-weight:700; 
-    padding:3px 9px; border-radius:6px; letter-spacing:0.5px; 
-  }
-  .type-indica { background:rgba(123,97,255,0.18); color:var(--ind); }
-  .type-sativa { background:rgba(0,212,170,0.18); color:var(--sat); }
-  .type-hybrid { background:rgba(255,159,28,0.18); color:var(--hyb); }
-
-  .thc-pill { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--accent); }
-  .expand-icon { color:var(--muted); transition: transform 0.2s; }
-  .strain-card.expanded .expand-icon { transform: rotate(180deg); }
-
-  .strain-body { display:none; padding:0 16px 16px; border-top:1px solid var(--border); }
-  .strain-card.expanded .strain-body { display:block; }
-
-  .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
-  .detail-box { background: var(--surface); border-radius:10px; padding:12px; border: 1px solid var(--border); }
-  .detail-box.full { grid-column: 1/-1; }
-  .detail-label { font-size:0.62rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; display:flex; align-items:center; gap:5px; }
-  .detail-label .dot { width:6px; height:6px; border-radius:50%; display:inline-block; }
-  .detail-value { font-size:0.83rem; color:var(--text); line-height: 1.4; }
+  .overlay { position:fixed; inset:0; background:rgba(5,5,5,0.98); z-index:2000; display:none; align-items:center; justify-content:center; backdrop-filter: blur(20px); padding: 20px; overflow-y: auto; }
+  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 380px; padding: 24px; }
   
-  .tag-list { display:flex; flex-wrap:wrap; gap:5px; margin-top:4px; }
-  .tag { font-size:0.65rem; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.05); color:var(--muted); border:1px solid var(--border); }
+  .btn { padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border); font-family:'DM Sans'; font-size:0.75rem; font-weight:600; cursor:pointer; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-accent { background: var(--brand-green); color: #000; border:none; }
+  .btn-small { padding: 4px 8px; font-size: 0.6rem; text-transform: uppercase; }
   
-  .terp-tag { font-family:'DM Mono',monospace; font-size:0.68rem; padding:3px 8px; border-radius:6px; background:rgba(123,97,255,0.1); color:#a89aff; margin-right: 4px; display: inline-block; }
+  .input { background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 12px; border-radius: 8px; width: 100%; font-family: 'DM Sans'; font-size: 0.9rem; margin-top: 5px; }
+  .label { font-size: 0.55rem; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px; }
 
-  .pro-text { color: var(--pro); font-weight: 500; }
-  .con-text { color: var(--con); font-weight: 500; }
+  .strain-list { padding: 16px; display:grid; gap:12px; }
+  .strain-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .strain-header { padding: 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  
+  .fav-btn { width: 22px; height: 22px; cursor: pointer; margin-right: 12px; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  .fav-btn:active { transform: scale(1.4); }
+  .fav-btn svg { width: 100%; height: 100%; fill: currentColor; pointer-events: none; }
 
-  .edit-area { width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:10px; font-family:'DM Mono',monospace; font-size:0.75rem; min-height:100px; }
+  .tag-indica { color: var(--indica); border-color: rgba(167, 139, 250, 0.3); background: rgba(167, 139, 250, 0.05); }
+  .tag-sativa { color: var(--sativa); border-color: rgba(251, 191, 36, 0.3); background: rgba(251, 191, 36, 0.05); }
+  .tag-hybrid { color: var(--hybrid); border-color: rgba(52, 211, 153, 0.3); background: rgba(52, 211, 153, 0.05); }
+  
+  .type-tag { font-size: 0.55rem; font-weight: 900; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; border: 1px solid transparent; }
+  .stock-pill { font-size: 0.65rem; padding: 4px 10px; border-radius: 10px; text-transform: uppercase; font-weight: 800; border: 1px solid transparent; }
+  .stock-high { color: var(--brand-green); border-color: var(--brand-green); }
+
+  .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+  .data-box { background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px; }
+  .meta-line { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; font-size: 0.75rem; }
+  .meta-key { color: var(--muted); font-weight: 600; font-size: 0.6rem; text-transform: uppercase; }
+
+  .note-entry { background: rgba(255,255,255,0.02); border-radius: 8px; padding: 10px; margin-bottom: 8px; font-size: 0.75rem; border-left: 3px solid #7b61ff; }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>STRAIN GUIDE</h1>
-  <p id="strainCount">Loading...</p>
-  <div class="header-actions">
-    <button class="btn btn-ghost" onclick="toggleAll()">Expand All</button>
-    <button class="btn btn-ghost" onclick="toggleEditMode()">✏️ Edit Data</button>
+<div id="profileOverlay" class="overlay">
+  <div class="modal">
+    <h2 style="font-family:'Bebas Neue'; font-size: 1.8rem; margin-bottom: 20px; color: var(--brand-green);">HOUSEHOLD SETTINGS</h2>
+    <div id="userGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom: 20px;"></div>
+    <div id="colorSettings" style="border-top: 1px solid var(--border); padding-top: 20px; display:none;">
+        <span class="label">Your Theme Color</span>
+        <input type="color" id="colorPicker" class="input" style="height: 50px; padding: 5px; cursor: pointer;">
+        <button class="btn btn-accent" style="width:100%; margin-top: 10px;" onclick="saveProfileSettings()">Update Color</button>
+        <button class="btn" style="width:100%; margin-top: 10px; border:none;" onclick="closeOverlays()">Done</button>
+    </div>
   </div>
 </div>
 
-<div class="filters">
-  <button class="filter-chip active" onclick="filterStrains('all', this)">All</button>
-  <button class="filter-chip" onclick="filterStrains('sleepy', this)">😴 Sleepy</button>
-  <button class="filter-chip" onclick="filterStrains('talkative', this)">🗣️ Talkative</button>
-  <button class="filter-chip" onclick="filterStrains('energy', this)">⚡ Energy</button>
-  <button class="filter-chip" onclick="filterStrains('pain', this)">🩹 Pain Relief</button>
-  <button class="filter-chip" onclick="filterStrains('creative', this)">🎨 Creative</button>
-  <button class="filter-chip" onclick="filterStrains('relaxed', this)">🛋️ Relaxed</button>
-  <button class="filter-chip" onclick="filterStrains('euphoric', this)">😊 Euphoric</button>
-  <button class="filter-chip" onclick="filterStrains('happy', this)">😄 Happy</button>
-  <button class="filter-chip" onclick="filterStrains('focused', this)">🎯 Focused</button>
-  <button class="filter-chip" onclick="filterStrains('hungry', this)">🍔 Hungry</button>
+<div class="header">
+  <h1>420</h1>
+  <div class="user-identity" onclick="openProfileMenu()">
+    <span id="displayUserName" class="user-name">...</span>
+    <div id="statusDot" class="user-avatar"></div>
+  </div>
 </div>
 
 <div class="strain-list" id="strainList"></div>
 
 <script>
 const SB_URL = 'https://lukkvyjkkwrtbshzcmbo.supabase.co';
-const SB_KEY ='sb_publishable_vw0EbFO3Y2V4k95ONkm3Rw_4PovdtRO';
-
+const SB_KEY = 'sb_publishable_vw0EbFO3Y2V4k95ONkm3Rw_4PovdtRO';
 const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
-let strains = [];
-let editMode = false;
-let allExpanded = false;
+let strains = [], profiles = [], currentUser = null;
+
+function toHex(c) {
+    if (!c) return "#4ade80";
+    if (c.startsWith("#")) return c;
+    const ctx = document.createElement('canvas').getContext('2d');
+    ctx.fillStyle = c;
+    return ctx.fillStyle; 
+}
+
+// Watcher to force color sliders to correct default
+const observer = new MutationObserver(() => {
+    const overlay = document.getElementById('profileOverlay');
+    const picker = document.getElementById('colorPicker');
+    if (overlay.style.display === 'flex' && currentUser) {
+        setTimeout(() => { picker.value = toHex(currentUser.color); }, 10);
+    }
+});
+observer.observe(document.getElementById('profileOverlay'), { attributes: true, attributeFilter: ['style'] });
+
+async function init() {
+    await loadProfiles();
+    const storedUser = localStorage.getItem('strain_user');
+    currentUser = profiles.find(p => p.name === storedUser);
+
+    if (!currentUser) {
+        document.getElementById('profileOverlay').style.display = 'flex';
+    } else {
+        document.getElementById('colorSettings').style.display = 'block';
+        document.getElementById('displayUserName').innerText = (currentUser.name || '').toUpperCase();
+        document.getElementById('displayUserName').style.color = currentUser.color;
+        document.getElementById('statusDot').style.backgroundColor = currentUser.color;
+        fetchStrains();
+    }
+}
+
+async function loadProfiles() {
+    const { data } = await _supabase.from('profiles').select('*').order('name');
+    if (data) {
+        profiles = data;
+        document.getElementById('userGrid').innerHTML = data.map(p => `
+            <button class="btn" style="border-color:${p.color}; color:${p.color}" onclick="setUser('${p.name}')">${p.name}</button>
+        `).join('');
+    }
+}
+
+function openProfileMenu() { document.getElementById('profileOverlay').style.display = 'flex'; }
+function setUser(name) { localStorage.setItem('strain_user', name); location.reload(); }
+async function saveProfileSettings() {
+    await _supabase.from('profiles').update({ color: document.getElementById('colorPicker').value }).eq('id', currentUser.id);
+    location.reload();
+}
+function closeOverlays() { document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none'); }
 
 async function fetchStrains() {
-  try {
-    const { data, error } = await _supabase.from('strains').select('*').order('name', { ascending: true });
-    if (error) throw error;
-    strains = data || [];
-    document.getElementById('strainCount').innerText = `${strains.length} Strains Available`;
-    renderStrains('all');
-  } catch (err) {
-    console.error("Fetch error:", err);
-    document.getElementById('strainCount').innerHTML = `Error loading strains.<br><small style="color:#ff5252">${err.message}</small>`;
-  }
+    const { data } = await _supabase.from('strains').select('*');
+    if (data) {
+        strains = data.sort((a,b) => {
+            const aFav = (a.favorites || []).includes(currentUser.name) ? 1 : 0;
+            const bFav = (b.favorites || []).includes(currentUser.name) ? 1 : 0;
+            return bFav - aFav;
+        });
+        renderList();
+    }
 }
 
-function getTypeClass(typeStr) {
-  if (!typeStr) return 'type-hybrid';
-  const t = typeStr.toLowerCase();
-  if (t.includes('indica')) return 'type-indica';
-  if (t.includes('sativa')) return 'type-sativa';
-  return 'type-hybrid';
-}
+function renderList() {
+    document.getElementById('strainList').innerHTML = strains.map(s => {
+        const isFav = (s.favorites || []).includes(currentUser.name);
+        const typeClass = (s.type || '').toLowerCase().includes('indica') ? 'tag-indica' : (s.type || '').toLowerCase().includes('sativa') ? 'tag-sativa' : 'tag-hybrid';
+        const favNames = (s.favorites || []).map(name => {
+            const p = profiles.find(x => x.name === name);
+            return `<span style="color:${p?.color || 'var(--text)'}; font-weight:700;">${name}</span>`;
+        }).join(', ') || 'No one';
 
-function renderStrains(filter) {
-  const list = document.getElementById('strainList');
-  list.innerHTML = '';
-
-  let filtered = strains;
-  if (filter !== 'all') {
-    const lower = filter.toLowerCase();
-    filtered = strains.filter(s => {
-      const tags = (s.tags || '').toLowerCase();
-      const best = (s.bestFor || '').toLowerCase();
-      return tags.includes(lower) || best.includes(lower);
-    });
-  }
-
-  filtered.forEach((s, i) => {
-    const card = document.createElement('div');
-    card.className = `strain-card ${allExpanded ? 'expanded' : ''}`;
-    card.id = `card-${i}`;
-
-    const typeClass = getTypeClass(s.type);
-    const displayType = s.type || 'Hybrid';
-
-    // Parse Terpenes
-    let terpHTML = 'None';
-    if (s.terpenes) {
-      const terps = Array.isArray(s.terpenes) ? s.terpenes : String(s.terpenes).split(',').map(t => t.trim());
-      terpHTML = terps.filter(t => t).map(t => `<span class="terp-tag">${t}</span>`).join('');
-    }
-
-    // Parse Tags
-    let tagsHTML = '';
-    if (s.tags) {
-      const tagArray = Array.isArray(s.tags) ? s.tags : String(s.tags).split(',').map(t => t.trim());
-      tagsHTML = tagArray.filter(t => t).map(t => `<span class="tag">#${t}</span>`).join('');
-    }
-
-    card.innerHTML = `
-      <div class="strain-header" onclick="toggleCard(${i})">
-        <span class="strain-num">${String(i+1).padStart(2,'0')}</span>
-        <div class="strain-info">
-          <div class="strain-name">${s.name}</div>
-          <div class="strain-meta">
-            <span class="type-badge ${typeClass}">${displayType}</span>
-            <span class="thc-pill">THC ${s.thc || '??%'}</span>
-          </div>
-        </div>
-        <span class="expand-icon">▾</span>
-      </div>
-      <div class="strain-body">
-        <div class="detail-grid">
-          <div class="detail-box full">
-            <div class="detail-label"><span class="dot" style="background:var(--muted)"></span>Genetics</div>
-            <div class="detail-value">${s.genetics || 'Unknown Genetics'}</div>
-          </div>
-          
-          <div class="detail-box">
-            <div class="detail-label"><span class="dot" style="background:var(--pro)"></span>Pros</div>
-            <div class="detail-value pro-text">${s.pros || 'N/A'}</div>
-          </div>
-          
-          <div class="detail-box">
-            <div class="detail-label"><span class="dot" style="background:var(--con)"></span>Cons</div>
-            <div class="detail-value con-text">${s.cons || 'N/A'}</div>
-          </div>
-
-          <div class="detail-box full">
-            <div class="detail-label"><span class="dot" style="background:var(--accent3)"></span>Terpenes</div>
-            <div class="terp-tags">${terpHTML}</div>
-          </div>
-
-          <div class="detail-box full">
-            <div class="detail-label"><span class="dot" style="background:var(--accent2)"></span>Best For</div>
-            <div class="detail-value">${s.bestFor || 'General Use'}</div>
-            <div class="tag-list">${tagsHTML}</div>
-          </div>
-
-          ${editMode ? `
-            <div class="detail-box full">
-              <textarea class="edit-area" id="edit-${s.id || i}">${JSON.stringify(s, null, 2)}</textarea>
-              <button class="btn btn-primary" style="margin-top:10px" onclick="console.log('Save logic here')">Save Changes</button>
+        return `
+        <div class="strain-card">
+            <div class="strain-header" onclick="toggleCard(${s.id})">
+                <div style="display:flex; align-items:center;">
+                    <div id="heart-${s.id}" class="fav-btn" style="color: ${isFav ? currentUser.color : 'var(--border)'};" onclick="toggleFav(event, ${s.id})">
+                         <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-weight:700;">${s.name}</div>
+                        <div style="display:flex; align-items:center;"><span class="type-tag ${typeClass}">${s.type || 'Hybrid'}</span></div>
+                    </div>
+                </div>
+                <div class="stock-pill stock-${(s.stock||'out').toLowerCase().split(' ')[0]}">${s.stock || 'Out'}</div>
             </div>
-          ` : ''}
-        </div>
-      </div>
-    `;
-    list.appendChild(card);
-  });
+            
+            <div id="body-${s.id}" style="display:none; padding:16px; border-top:1px solid var(--border);">
+                <div class="data-grid">
+                    <div class="data-box"><span class="label">Pros</span><div style="font-size:0.7rem; color:var(--pro-text);">${s.pros || 'N/A'}</div></div>
+                    <div class="data-box"><span class="label">Cons</span><div style="font-size:0.7rem; color:var(--con-text);">${s.cons || 'N/A'}</div></div>
+                </div>
+                <div class="meta-line"><span class="meta-key">Genetics / Terps</span><span>${s.terpenes || '--'}</span></div>
+                <div class="meta-line"><span class="meta-key">Flavor</span><span>${s.flavor || '--'}</span></div>
+                <div class="meta-line"><span class="meta-key">Best For</span><span>${s.bestFor || '--'}</span></div>
+                <div class="meta-line"><span class="meta-key">Favorite Of</span><span id="fav-list-${s.id}">${favNames}</span></div>
+
+                <div style="margin-top:15px;">
+                    <span class="label">Household Notes</span>
+                    <div id="notes-container-${s.id}">${renderNotes(s)}</div>
+                    <input type="text" id="in-${s.id}" class="input" style="padding:8px; font-size:0.75rem;" placeholder="Add new note...">
+                    <button class="btn btn-accent" style="width:100%; margin-top:5px; padding:6px;" onclick="saveNote(${s.id})">Save Note</button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
 }
 
-function toggleCard(i) {
-  const card = document.getElementById(`card-${i}`);
-  if(card) card.classList.toggle('expanded');
+function renderNotes(strain) {
+    if (!strain.notes || strain.notes.length === 0) return '<div style="font-size:0.7rem; color:var(--muted); margin-bottom:10px;">No notes yet.</div>';
+    return strain.notes.map((n, idx) => {
+        const p = profiles.find(x => x.name === n.user);
+        return `
+            <div class="note-entry" style="border-left-color:${p?.color}">
+                <b style="color:${p?.color}">${n.user}:</b> 
+                <span id="note-text-${strain.id}-${idx}">${n.text}</span>
+                ${n.user === currentUser.name ? `
+                    <div class="note-actions">
+                        <button class="btn btn-small" onclick="editNoteMode(${strain.id}, ${idx})">Edit</button>
+                    </div>` : ''}
+            </div>`;
+    }).join('');
 }
 
-function filterStrains(type, btn) {
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  renderStrains(type);
+function toggleCard(id) {
+    const el = document.getElementById(`body-${id}`);
+    const isHidden = el.style.display === 'none';
+    document.querySelectorAll('[id^="body-"]').forEach(b => b.style.display = 'none');
+    if(isHidden) el.style.display = 'block';
 }
 
-function toggleEditMode() {
-  editMode = !editMode;
-  renderStrains('all');
+function editNoteMode(strainId, noteIdx) {
+    const span = document.getElementById(`note-text-${strainId}-${noteIdx}`);
+    const currentText = span.innerText;
+    span.innerHTML = `<input type="text" id="edit-input-${strainId}-${noteIdx}" class="input" style="padding:4px; font-size:0.75rem;" value="${currentText}">
+                      <button class="btn btn-small btn-accent" style="margin-top:5px;" onclick="updateNote(${strainId}, ${noteIdx})">Update</button>`;
 }
 
-function toggleAll() {
-  allExpanded = !allExpanded;
-  document.querySelectorAll('.strain-card').forEach(c => c.classList.toggle('expanded', allExpanded));
+async function updateNote(strainId, noteIdx) {
+    const newText = document.getElementById(`edit-input-${strainId}-${noteIdx}`).value.trim();
+    const s = strains.find(x => x.id === strainId);
+    if (newText === "") s.notes.splice(noteIdx, 1);
+    else s.notes[noteIdx].text = newText;
+    
+    await _supabase.from('strains').update({ notes: s.notes }).eq('id', strainId);
+    document.getElementById(`notes-container-${strainId}`).innerHTML = renderNotes(s);
 }
 
-fetchStrains();
+async function saveNote(id) {
+    const input = document.getElementById(`in-${id}`);
+    if(!input.value) return;
+    const s = strains.find(x => x.id === id);
+    s.notes = [...(s.notes || []), { user: currentUser.name, text: input.value }];
+    await _supabase.from('strains').update({ notes: s.notes }).eq('id', id);
+    input.value = "";
+    document.getElementById(`notes-container-${id}`).innerHTML = renderNotes(s);
+}
+
+async function toggleFav(e, id) {
+    e.stopPropagation();
+    const s = strains.find(x => x.id === id);
+    if (!s) return;
+
+    let f = Array.isArray(s.favorites) ? [...s.favorites] : [];
+    if (f.includes(currentUser.name)) {
+        f = f.filter(n => n !== currentUser.name);
+    } else {
+        f.push(currentUser.name);
+    }
+    
+    s.favorites = f; // Update local state
+    
+    // Update Supabase
+    const { error } = await _supabase.from('strains').update({ favorites: f }).eq('id', id);
+    
+    if (!error) {
+        // UI Update: Heart Color
+        document.getElementById(`heart-${id}`).style.color = f.includes(currentUser.name) ? currentUser.color : 'var(--border)';
+        
+        // UI Update: Names List
+        document.getElementById(`fav-list-${id}`).innerHTML = f.map(name => {
+            const p = profiles.find(x => x.name === name);
+            return `<span style="color:${p?.color || 'var(--text)'}; font-weight:700;">${name}</span>`;
+        }).join(', ') || 'No one';
+    }
+}
+
+init();
 </script>
 </body>
 </html>
