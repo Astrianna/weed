@@ -39,7 +39,6 @@
   .strain-header { padding: 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
   
   .fav-btn { width: 22px; height: 22px; cursor: pointer; margin-right: 12px; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  .fav-btn:active { transform: scale(1.4); }
   .fav-btn svg { width: 100%; height: 100%; fill: currentColor; pointer-events: none; }
 
   .tag-indica { color: var(--indica); border-color: rgba(167, 139, 250, 0.3); background: rgba(167, 139, 250, 0.05); }
@@ -49,6 +48,12 @@
   .type-tag { font-size: 0.55rem; font-weight: 900; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; border: 1px solid transparent; }
   .stock-pill { font-size: 0.65rem; padding: 4px 10px; border-radius: 10px; text-transform: uppercase; font-weight: 800; border: 1px solid transparent; }
   .stock-high { color: var(--brand-green); border-color: var(--brand-green); }
+  .stock-low { color: #fbbf24; border-color: #fbbf24; }
+  .stock-out { color: #f87171; border-color: #f87171; }
+
+  .stock-updater { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
+  .stock-btn { font-size: 0.6rem; padding: 6px; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); cursor: pointer; text-transform: uppercase; font-weight: 700; text-align: center; }
+  .stock-btn.active { background: rgba(255,255,255,0.1); color: var(--text); border-color: var(--muted); }
 
   .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
   .data-box { background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px; }
@@ -98,7 +103,6 @@ function toHex(c) {
     return ctx.fillStyle; 
 }
 
-// Watcher to force color sliders to correct default
 const observer = new MutationObserver(() => {
     const overlay = document.getElementById('profileOverlay');
     const picker = document.getElementById('colorPicker');
@@ -158,6 +162,7 @@ function renderList() {
     document.getElementById('strainList').innerHTML = strains.map(s => {
         const isFav = (s.favorites || []).includes(currentUser.name);
         const typeClass = (s.type || '').toLowerCase().includes('indica') ? 'tag-indica' : (s.type || '').toLowerCase().includes('sativa') ? 'tag-sativa' : 'tag-hybrid';
+        const stockClass = (s.stock || '').toLowerCase().includes('high') ? 'stock-high' : (s.stock || '').toLowerCase().includes('low') ? 'stock-low' : 'stock-out';
         const favNames = (s.favorites || []).map(name => {
             const p = profiles.find(x => x.name === name);
             return `<span style="color:${p?.color || 'var(--text)'}; font-weight:700;">${name}</span>`;
@@ -175,14 +180,22 @@ function renderList() {
                         <div style="display:flex; align-items:center;"><span class="type-tag ${typeClass}">${s.type || 'Hybrid'}</span></div>
                     </div>
                 </div>
-                <div class="stock-pill stock-${(s.stock||'out').toLowerCase().split(' ')[0]}">${s.stock || 'Out'}</div>
+                <div id="pill-${s.id}" class="stock-pill ${stockClass}">${s.stock || 'Out'}</div>
             </div>
             
             <div id="body-${s.id}" style="display:none; padding:16px; border-top:1px solid var(--border);">
+                <span class="label">Update Stock</span>
+                <div class="stock-updater">
+                    <div class="stock-btn ${s.stock==='High Stock'?'active':''}" onclick="updateStock(${s.id}, 'High Stock')">High</div>
+                    <div class="stock-btn ${s.stock==='Low Stock'?'active':''}" onclick="updateStock(${s.id}, 'Low Stock')">Low</div>
+                    <div class="stock-btn ${s.stock==='Out of Stock'?'active':''}" onclick="updateStock(${s.id}, 'Out of Stock')">Out</div>
+                </div>
+
                 <div class="data-grid">
                     <div class="data-box"><span class="label">Pros</span><div style="font-size:0.7rem; color:var(--pro-text);">${s.pros || 'N/A'}</div></div>
                     <div class="data-box"><span class="label">Cons</span><div style="font-size:0.7rem; color:var(--con-text);">${s.cons || 'N/A'}</div></div>
                 </div>
+                
                 <div class="meta-line"><span class="meta-key">Genetics / Terps</span><span>${s.terpenes || '--'}</span></div>
                 <div class="meta-line"><span class="meta-key">Flavor</span><span>${s.flavor || '--'}</span></div>
                 <div class="meta-line"><span class="meta-key">Best For</span><span>${s.bestFor || '--'}</span></div>
@@ -222,6 +235,23 @@ function toggleCard(id) {
     if(isHidden) el.style.display = 'block';
 }
 
+async function updateStock(id, status) {
+    const s = strains.find(x => x.id === id);
+    s.stock = status;
+    await _supabase.from('strains').update({ stock: status }).eq('id', id);
+    
+    // Silent UI update
+    const pill = document.getElementById(`pill-${id}`);
+    pill.innerText = status;
+    pill.className = `stock-pill stock-${status.toLowerCase().split(' ')[0]}`;
+    
+    // Update button states in expanded view
+    const body = document.getElementById(`body-${id}`);
+    body.querySelectorAll('.stock-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.innerText.toLowerCase() === status.toLowerCase().split(' ')[0]);
+    });
+}
+
 function editNoteMode(strainId, noteIdx) {
     const span = document.getElementById(`note-text-${strainId}-${noteIdx}`);
     const currentText = span.innerText;
@@ -234,7 +264,6 @@ async function updateNote(strainId, noteIdx) {
     const s = strains.find(x => x.id === strainId);
     if (newText === "") s.notes.splice(noteIdx, 1);
     else s.notes[noteIdx].text = newText;
-    
     await _supabase.from('strains').update({ notes: s.notes }).eq('id', strainId);
     document.getElementById(`notes-container-${strainId}`).innerHTML = renderNotes(s);
 }
@@ -253,24 +282,13 @@ async function toggleFav(e, id) {
     e.stopPropagation();
     const s = strains.find(x => x.id === id);
     if (!s) return;
-
     let f = Array.isArray(s.favorites) ? [...s.favorites] : [];
-    if (f.includes(currentUser.name)) {
-        f = f.filter(n => n !== currentUser.name);
-    } else {
-        f.push(currentUser.name);
-    }
-    
-    s.favorites = f; // Update local state
-    
-    // Update Supabase
+    if (f.includes(currentUser.name)) f = f.filter(n => n !== currentUser.name);
+    else f.push(currentUser.name);
+    s.favorites = f;
     const { error } = await _supabase.from('strains').update({ favorites: f }).eq('id', id);
-    
     if (!error) {
-        // UI Update: Heart Color
         document.getElementById(`heart-${id}`).style.color = f.includes(currentUser.name) ? currentUser.color : 'var(--border)';
-        
-        // UI Update: Names List
         document.getElementById(`fav-list-${id}`).innerHTML = f.map(name => {
             const p = profiles.find(x => x.name === name);
             return `<span style="color:${p?.color || 'var(--text)'}; font-weight:700;">${name}</span>`;
